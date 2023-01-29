@@ -3,6 +3,7 @@
 # 3. 시간 제한 99초 초과 시 게임 종료 (실패)
 import os
 import pygame
+import time
 ##############################################################
 # 기본 초기화 (반드시 해야 하는 것들)
 pygame.init()
@@ -17,6 +18,12 @@ pygame.display.set_caption("Nado Pang")
 
 # FPS
 clock = pygame.time.Clock()
+
+# 게임 시작 사운드
+start_sound = pygame.mixer.Sound("C:/Python/Python_2023_01_Game_Pong/sound/game-start-6104.mp3")
+start_sound.play()
+bgm_sound = pygame.mixer.Sound("C:/Python/Python_2023_01_Game_Pong/sound/bgm.mp3")
+bgm_sound.play(-1)
 ##############################################################
 
 # 1. 사용자 게임 초기화 (배경 화면, 게임 이미지, 좌표, 속도, 폰트 등)
@@ -175,6 +182,9 @@ while running:
 
         # 공과 캐릭터 충돌 체크
         if character_rect.colliderect(ball_rect):
+            bgm_sound.stop()
+            gameover_sound = pygame.mixer.Sound("C:/Python/Python_2023_01_Game_Pong/sound/gameover.mp3")
+            gameover_sound.play()
             running = False
             break
 
@@ -190,6 +200,8 @@ while running:
 
             # 충돌 체크
             if weapon_rect.colliderect(ball_rect):
+                hit_sound = pygame.mixer.Sound("C:/Python/Python_2023_01_Game_Pong/sound/hit.mp3")
+                hit_sound.play()
                 weapon_to_remove = weapon_idx # 해당 무기 없애기 위한 값 설정
                 ball_to_remove = ball_idx # 해당 공 없애기 위한 값 설정
 
@@ -238,6 +250,9 @@ while running:
 
     # 모든 공을 없앤 경우 게임 종료 (성공)
     if len(balls) == 0:
+        bgm_sound.stop()
+        win_sound = pygame.mixer.Sound("C:/Python/Python_2023_01_Game_Pong/sound/win.mp3")
+        win_sound.play()
         game_result = "Mission Complete!!"
         running = False
 
@@ -263,6 +278,9 @@ while running:
 
     # 시간 초과했다면(음수 값이 되면)
     if total_time - elapsed_time <= 0:
+        bgm_sound.stop()
+        gameover_sound = pygame.mixer.Sound("C:/Python/Python_2023_01_Game_Pong/sound/gameover.mp3")
+        gameover_sound.play()
         game_result = "Time Over"
         running = False
 
@@ -275,6 +293,6 @@ msg_rect = msg.get_rect(center=(int(screen_width / 2), int(screen_height / 2)))
 screen.blit(msg, msg_rect)
 pygame.display.update()
 
-pygame.time.delay(2000)
+pygame.time.delay(2500)
 
 pygame.quit()
